@@ -106,7 +106,6 @@ func (c *Client) GetAccessToken() (*TokenResp, error) {
 	if err == nil {
 		t.ExpiresAt = time.Now().Add(time.Duration(t.ExpiresIn/2) * time.Second)
 	}
-	log.Println(t.ExpiresAt)
 
 	return &t, err
 }
