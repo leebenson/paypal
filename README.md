@@ -1,5 +1,7 @@
 # Payment REST API Go client
 
+[![Coverage Status](https://coveralls.io/repos/fundary/paypal/badge.png)](https://coveralls.io/r/fundary/paypal) [![GoDoc](https://godoc.org/github.com/fundary/paypal?status.svg)](https://godoc.org/github.com/fundary/paypal)
+
 This is a client for the Paypal REST API ([https://developer.paypal.com/webapps/developer/docs/api/](https://developer.paypal.com/webapps/developer/docs/api/)
 
 ## Goals
