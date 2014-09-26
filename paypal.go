@@ -27,7 +27,7 @@ type (
 		ClientID string
 		Secret   string
 		APIBase  string
-		Token    TokenResp
+		Token    *TokenResp
 	}
 
 	// ErrorResponse is used when a response contains errors
@@ -72,7 +72,7 @@ func NewClient(clientID, secret, APIBase string) *Client {
 		clientID,
 		secret,
 		APIBase,
-		TokenResp{},
+		nil,
 	}
 }
 
@@ -92,11 +92,11 @@ func NewRequest(method, url string, payload interface{}) (*http.Request, error) 
 }
 
 // GetAcessToken request a new access token from Paypal
-func (c *Client) GetAccessToken() (TokenResp, error) {
+func (c *Client) GetAccessToken() (*TokenResp, error) {
 	buf := bytes.NewBuffer([]byte("grant_type=client_credentials"))
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s%s", c.APIBase, "/oauth2/token"), buf)
 	if err != nil {
-		return TokenResp{}, err
+		return nil, err
 	}
 	req.SetBasicAuth(c.ClientID, c.Secret)
 	req.Header.Set("Content-type", "application/x-www-form-urlencoded")
@@ -106,8 +106,9 @@ func (c *Client) GetAccessToken() (TokenResp, error) {
 	if err == nil {
 		t.ExpiresAt = time.Now().Add(time.Duration(t.ExpiresIn/2) * time.Second)
 	}
+	log.Println(t.ExpiresAt)
 
-	return t, err
+	return &t, err
 }
 
 // Send makes a request to the API, the response body will be
@@ -159,7 +160,7 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 // If the access token soon to be expired, it will try to get a new one before
 // making the main request
 func (c *Client) SendWithAuth(req *http.Request, v interface{}) error {
-	if (c.Token == TokenResp{}) || (c.Token.ExpiresAt.After(time.Now())) {
+	if (c.Token == nil) || (c.Token.ExpiresAt.Before(time.Now())) {
 		resp, err := c.GetAccessToken()
 		if err != nil {
 			return err
