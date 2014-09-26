@@ -81,6 +81,7 @@ func TestPaypal(t *testing.T) {
 			So(newPaymentResp.Intent, ShouldEqual, PaymentIntentSale)
 			So(newPaymentResp.ID, ShouldNotBeNil)
 
+			// This requires manual test as the payer needs to approve inside Paypal
 			// Convey("Execute the newly created payment should be successful", func() {
 			// 	resp, err := client.ExecutePayment(newPaymentResp.ID, payer.ID, nil)
 			//
