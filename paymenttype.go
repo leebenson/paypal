@@ -5,8 +5,95 @@ import (
 )
 
 // https://developer.paypal.com/webapps/developer/docs/api/#common-payments-objects
+
+var (
+	AuthorizationStatePending           AuthorizationState = "pending"
+	AuthorizationStateAuthorized        AuthorizationState = "authorized"
+	AuthorizationStateCaptured          AuthorizationState = "captured"
+	AuthorizationStatePartiallyCaptured AuthorizationState = "partially_captured"
+	AuthorizationStateExpired           AuthorizationState = "expired"
+	AuthorizationStateVoided            AuthorizationState = "voided"
+
+	CaptureStatePending           CaptureState = "pending"
+	CaptureStateCompleted         CaptureState = "completed"
+	CaptureStateRefunded          CaptureState = "refunded"
+	CaptureStatePartiallyRefunded CaptureState = "partially_refunded"
+
+	CreditCardStateExpired CreditCardState = "expired"
+	CreditCardStateOK      CreditCardState = "ok"
+
+	OrderStatePending           OrderState = "PENDING"
+	OrderStateCompleted         OrderState = "COMPLETED"
+	OrderStateRefunded          OrderState = "REFUNDED"
+	OrderStatePartiallyRefunded            = "PARTIALLY_REFUNDED"
+
+	PendingReasonPayerShippingUnconfirmed PendingReason = "PAYER-SHIPPING-UNCONFIRMED"
+	PendingReasonMultiCurrency            PendingReason = "MULTI-CURRENCY"
+	PendingReasonRiskReview               PendingReason = "RISK-REVIEW"
+	PendingReasonRegulatoryReview         PendingReason = "REGULATORY-REVIEW"
+	PendingReasonVerificationRequired     PendingReason = "VERIFICATION-REQUIRED"
+	PendingReasonOrder                    PendingReason = "ORDER"
+	PendingReasonOther                    PendingReason = "OTHER"
+
+	ReasonCodeChargeback                              ReasonCode = "CHARGEBACK"
+	ReasonCodeGuarantee                               ReasonCode = "GUARANTEE"
+	ReasonCodeBuyerComplaint                          ReasonCode = "BUYER_COMPLAINT"
+	ReasonCodeRefund                                  ReasonCode = "REFUND"
+	ReasonCodeUnconfirmedShippingAddress              ReasonCode = "UNCONFIRMED_SHIPPING_ADDRESS"
+	ReasonCodeEcheck                                  ReasonCode = "ECHECK"
+	ReasonCodeInternationalWithdrawal                 ReasonCode = "INTERNATIONAL_WITHDRAWAL"
+	ReasonCodeReceivingPreferenceMandatesManualAction ReasonCode = "RECEIVING_PREFERENCE_MANDATES_MANUAL_ACTION"
+	ReasonCodePaymentReview                           ReasonCode = "PAYMENT_REVIEW"
+	ReasonCodeRegulatoryReview                        ReasonCode = "REGULATORY_REVIEW"
+	ReasonCodeUnilateral                              ReasonCode = "UNILATERAL"
+	ReasonCodeVerificationRequired                    ReasonCode = "VERIFICATION_REQUIRED"
+
+	ProtectionEligibilityEligible          ProtectionEligibility = "ELIGIBLE"
+	ProtectionEligibilityPartiallyEligible ProtectionEligibility = "PARTIALLY_ELIGIBLE"
+	ProtectionEligibilityIneligible        ProtectionEligibility = "INELIGIBLE"
+
+	ProtectionEligibilityTypeEligible                    ProtectionEligibilityType = "ELIGIBLE"
+	ProtectionEligibilityTypeItemNotReceivedEligible     ProtectionEligibilityType = "ITEM_NOT_RECEIVED_ELIGIBLE"
+	ProtectionEligibilityTypeIneligible                  ProtectionEligibilityType = "INELIGIBLE"
+	ProtectionEligibilityTypeUnauthorizedPaymentEligible ProtectionEligibilityType = "UNAUTHORIZED_PAYMENT_ELIGIBLE"
+
+	PaymentMethodCreditCard PaymentMethod = "credit_card"
+	PaymentMethodPaypal     PaymentMethod = "paypal"
+
+	PayerStatusVerified   PayerStatus = "VERIFIED"
+	PayerStatusUnverified PayerStatus = "UNVERIFIED"
+
+	PaymentStateCreated  PaymentState = "created"
+	PaymentStateApproved PaymentState = "approved"
+	PaymentStateFailed   PaymentState = "failed"
+	PaymentStatePending  PaymentState = "pending"
+	PaymentStateCanceled PaymentState = "canceled"
+	PaymentStateExpired  PaymentState = "expired"
+
+	AddressTypeResidential AddressType = "residential"
+	AddressTypeBusiness    AddressType = "business"
+	AddressTypeMailbox     AddressType = "mailbox"
+
+	PaymentIntentSale      PaymentIntent = "sale"
+	PaymentIntentAuthorize PaymentIntent = "authorize"
+	PaymentIntentOrder     PaymentIntent = "order"
+
+	RefundStatePending   RefundState = "pending"
+	RefundStateCompleted RefundState = "completed"
+	RefundStateFailed    RefundState = "failed"
+
+	SaleStatePending           SaleState = "pending"
+	SaleStateCompleted         SaleState = "completed"
+	SaleStateRefunded          SaleState = "refunded"
+	SaleStatePartiallyRefunded SaleState = "partially_refunded"
+
+	SalePaymentModeInstantTransfer    SalePaymentMode = "INSTANT_TRANSFER"
+	SalePaymentModeManualBankTransfer SalePaymentMode = "MANUAL_BANK_TRANSFER"
+	SalePaymentModeDelayedTransfer    SalePaymentMode = "DELAYED_TRANSFER"
+	SalePaymentModeEcheck             SalePaymentMode = "ECHECK"
+)
+
 type (
-	// SaleState is an enum for the state of the sale. Valid values are "pending", "completed", "refunded", or "partially_refunded"
 	AuthorizationState        string
 	CaptureState              string
 	CreditCardState           string
@@ -256,91 +343,4 @@ type (
 		Custom           string        `json:"custom,omitempty"`
 		SoftDescriptor   string        `json:"soft_descriptor,omitempty"`
 	}
-)
-
-var (
-	AuthorizationStatePending           AuthorizationState = "pending"
-	AuthorizationStateAuthorized        AuthorizationState = "authorized"
-	AuthorizationStateCaptured          AuthorizationState = "captured"
-	AuthorizationStatePartiallyCaptured AuthorizationState = "partially_captured"
-	AuthorizationStateExpired           AuthorizationState = "expired"
-	AuthorizationStateVoided            AuthorizationState = "voided"
-
-	CaptureStatePending           CaptureState = "pending"
-	CaptureStateCompleted         CaptureState = "completed"
-	CaptureStateRefunded          CaptureState = "refunded"
-	CaptureStatePartiallyRefunded CaptureState = "partially_refunded"
-
-	CreditCardStateExpired CreditCardState = "expired"
-	CreditCardStateOK      CreditCardState = "ok"
-
-	OrderStatePending           OrderState = "PENDING"
-	OrderStateCompleted         OrderState = "COMPLETED"
-	OrderStateRefunded          OrderState = "REFUNDED"
-	OrderStatePartiallyRefunded            = "PARTIALLY_REFUNDED"
-
-	PendingReasonPayerShippingUnconfirmed PendingReason = "PAYER-SHIPPING-UNCONFIRMED"
-	PendingReasonMultiCurrency            PendingReason = "MULTI-CURRENCY"
-	PendingReasonRiskReview               PendingReason = "RISK-REVIEW"
-	PendingReasonRegulatoryReview         PendingReason = "REGULATORY-REVIEW"
-	PendingReasonVerificationRequired     PendingReason = "VERIFICATION-REQUIRED"
-	PendingReasonOrder                    PendingReason = "ORDER"
-	PendingReasonOther                    PendingReason = "OTHER"
-
-	ReasonCodeChargeback                              ReasonCode = "CHARGEBACK"
-	ReasonCodeGuarantee                               ReasonCode = "GUARANTEE"
-	ReasonCodeBuyerComplaint                          ReasonCode = "BUYER_COMPLAINT"
-	ReasonCodeRefund                                  ReasonCode = "REFUND"
-	ReasonCodeUnconfirmedShippingAddress              ReasonCode = "UNCONFIRMED_SHIPPING_ADDRESS"
-	ReasonCodeEcheck                                  ReasonCode = "ECHECK"
-	ReasonCodeInternationalWithdrawal                 ReasonCode = "INTERNATIONAL_WITHDRAWAL"
-	ReasonCodeReceivingPreferenceMandatesManualAction ReasonCode = "RECEIVING_PREFERENCE_MANDATES_MANUAL_ACTION"
-	ReasonCodePaymentReview                           ReasonCode = "PAYMENT_REVIEW"
-	ReasonCodeRegulatoryReview                        ReasonCode = "REGULATORY_REVIEW"
-	ReasonCodeUnilateral                              ReasonCode = "UNILATERAL"
-	ReasonCodeVerificationRequired                    ReasonCode = "VERIFICATION_REQUIRED"
-
-	ProtectionEligibilityEligible          ProtectionEligibility = "ELIGIBLE"
-	ProtectionEligibilityPartiallyEligible ProtectionEligibility = "PARTIALLY_ELIGIBLE"
-	ProtectionEligibilityIneligible        ProtectionEligibility = "INELIGIBLE"
-
-	ProtectionEligibilityTypeEligible                    ProtectionEligibilityType = "ELIGIBLE"
-	ProtectionEligibilityTypeItemNotReceivedEligible     ProtectionEligibilityType = "ITEM_NOT_RECEIVED_ELIGIBLE"
-	ProtectionEligibilityTypeIneligible                  ProtectionEligibilityType = "INELIGIBLE"
-	ProtectionEligibilityTypeUnauthorizedPaymentEligible ProtectionEligibilityType = "UNAUTHORIZED_PAYMENT_ELIGIBLE"
-
-	PaymentMethodCreditCard PaymentMethod = "credit_card"
-	PaymentMethodPaypal     PaymentMethod = "paypal"
-
-	PayerStatusVerified   PayerStatus = "VERIFIED"
-	PayerStatusUnverified PayerStatus = "UNVERIFIED"
-
-	PaymentStateCreated  PaymentState = "created"
-	PaymentStateApproved PaymentState = "approved"
-	PaymentStateFailed   PaymentState = "failed"
-	PaymentStatePending  PaymentState = "pending"
-	PaymentStateCanceled PaymentState = "canceled"
-	PaymentStateExpired  PaymentState = "expired"
-
-	AddressTypeResidential AddressType = "residential"
-	AddressTypeBusiness    AddressType = "business"
-	AddressTypeMailbox     AddressType = "mailbox"
-
-	PaymentIntentSale      PaymentIntent = "sale"
-	PaymentIntentAuthorize PaymentIntent = "authorize"
-	PaymentIntentOrder     PaymentIntent = "order"
-
-	RefundStatePending   RefundState = "pending"
-	RefundStateCompleted RefundState = "completed"
-	RefundStateFailed    RefundState = "failed"
-
-	SaleStatePending           SaleState = "pending"
-	SaleStateCompleted         SaleState = "completed"
-	SaleStateRefunded          SaleState = "refunded"
-	SaleStatePartiallyRefunded SaleState = "partially_refunded"
-
-	SalePaymentModeInstantTransfer    SalePaymentMode = "INSTANT_TRANSFER"
-	SalePaymentModeManualBankTransfer SalePaymentMode = "MANUAL_BANK_TRANSFER"
-	SalePaymentModeDelayedTransfer    SalePaymentMode = "DELAYED_TRANSFER"
-	SalePaymentModeEcheck             SalePaymentMode = "ECHECK"
 )

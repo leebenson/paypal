@@ -4,7 +4,7 @@ This is a client for the Paypal REST API ([https://developer.paypal.com/webapps/
 
 ## Goals
 
-- [x] Tests where feasible (some actions requires manual tests)
+- [x] Tests where feasible (some actions requires manual testing)
 - [ ] Concurrency safety by utilizing `PayPal-Request-Id`
 
 ## Usage
