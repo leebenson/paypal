@@ -1,7 +1,6 @@
 package paypal
 
 import (
-	"log"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -72,7 +71,6 @@ func TestPayment(t *testing.T) {
 
 				Convey("Fetching the newly created payment should return valid results", func() {
 					payment, err := client.GetPayment(newPaymentResp.ID)
-					log.Printf("newPaymentResp %+v\n", newPaymentResp)
 
 					So(err, ShouldBeNil)
 					So(payment.ID, ShouldEqual, newPaymentResp.ID)
@@ -86,25 +84,36 @@ func TestPayment(t *testing.T) {
 
 							So(err, ShouldBeNil)
 							So(sale.ID, ShouldEqual, newPaymentResp.Transactions[0].RelatedResources[0].Sale.ID)
+
+							// Cannot test refund as it require that a payment is approved and completed
+							// Convey("A partial refund for an existing sale should be successful", func() {
+							// 	amount := Amount{
+							// 		Total:    "2.34",
+							// 		Currency: "USD",
+							// 	}
+							//
+							// 	refund, err := client.RefundSale(sale.ID, &amount)
+							// 	So(err, ShouldBeNil)
+							//
+							// 	refundedSale, err := client.GetSale(newPaymentResp.Transactions[0].RelatedResources[0].Sale.ID)
+							//
+							// 	So(err, ShouldBeNil)
+							// 	So(refund.Amount.Total, ShouldEqual, amount.Total)
+							// 	So(refund.ParentPayment, ShouldEqual, payment.ID)
+							// 	So(refundedSale.State, ShouldEqual, SaleStatePartiallyRefunded)
+							// 	So(refundedSale.Amount.Total, ShouldEqual, "5.13")
+							//
+							// 	Convey("Retrieving the new refund should return valid results", func() {
+							// 		newRefund, err := client.GetRefund(refund.ID)
+							//
+							// 		So(err, ShouldBeNil)
+							// 		So(newRefund.ID, ShouldEqual, refund.ID)
+							// 		So(newRefund.Amount, ShouldResemble, refund.Amount)
+							//
+							// 	})
+							// })
 						})
 
-						Convey("A partial refund for an existing sale should be successful", func() {
-							amount := Amount{
-								Total:    "2.34",
-								Currency: "USD",
-							}
-
-							refund, err := client.RefundSale(payment.Transactions[0].RelatedResources[0].Sale.ID, &amount)
-							So(err, ShouldBeNil)
-
-							refundedSale, err := client.GetSale(newPaymentResp.Transactions[0].RelatedResources[0].Sale.ID)
-
-							So(err, ShouldBeNil)
-							So(refund.Amount.Total, ShouldEqual, amount.Total)
-							So(refund.ParentPayment, ShouldEqual, payment.ID)
-							So(refundedSale.State, ShouldEqual, SaleStatePartiallyRefunded)
-							So(refundedSale.Amount.Total, ShouldEqual, "5.13")
-						})
 					})
 				})
 

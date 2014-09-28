@@ -22,7 +22,7 @@ type (
 
 // CreatePayment creates a payment in Paypal
 func (c *Client) CreatePayment(p Payment) (*CreatePaymentResp, error) {
-	req, err := NewRequest("POST", fmt.Sprintf("%s%s", c.APIBase, "/payments/payment"), p)
+	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/payment", c.APIBase), p)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (c *Client) CreatePayment(p Payment) (*CreatePaymentResp, error) {
 
 // ExecutePayment completes an approved Paypal payment that has been approved by the payer
 func (c *Client) ExecutePayment(paymentID, payerID string, transactions []Transaction) (*ExecutePaymentResp, error) {
-	req, err := NewRequest("POST", fmt.Sprintf("%s%s%s/execute", c.APIBase, "/payments/payment/", paymentID), struct {
+	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/payment/%s/execute", c.APIBase, paymentID), struct {
 		PayerID      string        `json:"payer_id"`
 		Transactions []Transaction `json:"transactions"`
 	}{
@@ -62,7 +62,7 @@ func (c *Client) ExecutePayment(paymentID, payerID string, transactions []Transa
 
 // GetPayment fetches a payment in Paypal
 func (c *Client) GetPayment(id string) (*Payment, error) {
-	req, err := NewRequest("GET", fmt.Sprintf("%s%s%s", c.APIBase, "/payments/payment/", id), nil)
+	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/payment/%s", c.APIBase, id), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (c *Client) GetPayment(id string) (*Payment, error) {
 
 // ListPayments retrieve payments resources from Paypal
 func (c *Client) ListPayments(filter map[string]string) ([]Payment, error) {
-	req, err := NewRequest("GET", fmt.Sprintf("%s%s", c.APIBase, "/payments/payment/"), nil)
+	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/payment/", c.APIBase), nil)
 	if err != nil {
 		return nil, err
 	}
