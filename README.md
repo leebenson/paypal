@@ -30,7 +30,7 @@ PAYPAL_TEST_CLIENTID=[Paypal Client ID] PAYPAL_TEST_SECRET=[Paypal Secret] go te
 ## Roadmap
 
 - [x] [Payments - Payment](https://developer.paypal.com/webapps/developer/docs/api/#payments)
-- [ ] [Payments - Sale transactions](https://developer.paypal.com/webapps/developer/docs/api/#sale-transactions)
+- [x ] [Payments - Sale transactions](https://developer.paypal.com/webapps/developer/docs/api/#sale-transactions)
 - [ ] [Payments - Refunds](https://developer.paypal.com/webapps/developer/docs/api/#refunds)
 - [ ] [Payments - Authorizations](https://developer.paypal.com/webapps/developer/docs/api/#authorizations)
 - [ ] [Payments - Captures](https://developer.paypal.com/webapps/developer/docs/api/#billing-plans-and-agreements)

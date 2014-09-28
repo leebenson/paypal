@@ -1,21 +1,11 @@
 package paypal
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
 type (
 	CreatePaymentResp struct {
-		Intent       PaymentIntent `json:"intent"`
-		Payer        *Payer        `json:"payer"`
-		Transactions []Transaction `json:"transactions"`
-		RedirectURLs *RedirectURLs `json:"redirect_urls"`
-		ID           string        `json:"id"`
-		CreateTime   time.Time     `json:"create_time"`
-		State        PaymentState  `json:"state"`
-		UpdateTime   time.Time     `json:"update_time"`
-		Links        []Links       `json:"links"`
+		*Payment
+		Links []Links `json:"links"`
 	}
 
 	ExecutePaymentResp struct {
@@ -25,19 +15,8 @@ type (
 		Links        []Links       `json:"links"`
 	}
 
-	PaymentResp struct {
-		Intent       PaymentIntent `json:"intent"`
-		Payer        *Payer        `json:"payer"`
-		Transactions []Transaction `json:"transactions"`
-		RedirectURLs *RedirectURLs `json:"redirect_urls"`
-		ID           string        `json:"id"`
-		CreateTime   time.Time     `json:"create_time"`
-		State        PaymentState  `json:"state"`
-		UpdateTime   time.Time     `json:"update_time"`
-	}
-
 	ListPaymentsResp struct {
-		Payments []PaymentResp `json:"payments"`
+		Payments []Payment `json:"payments"`
 	}
 )
 
@@ -82,13 +61,13 @@ func (c *Client) ExecutePayment(paymentID, payerID string, transactions []Transa
 }
 
 // GetPayment fetches a payment in Paypal
-func (c *Client) GetPayment(id string) (*PaymentResp, error) {
+func (c *Client) GetPayment(id string) (*Payment, error) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s%s%s", c.APIBase, "/payments/payment/", id), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	v := &PaymentResp{}
+	v := &Payment{}
 
 	err = c.SendWithAuth(req, v)
 	if err != nil {
@@ -99,7 +78,7 @@ func (c *Client) GetPayment(id string) (*PaymentResp, error) {
 }
 
 // ListPayments retrieve payments resources from Paypal
-func (c *Client) ListPayments(filter map[string]string) ([]PaymentResp, error) {
+func (c *Client) ListPayments(filter map[string]string) ([]Payment, error) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s%s", c.APIBase, "/payments/payment/"), nil)
 	if err != nil {
 		return nil, err

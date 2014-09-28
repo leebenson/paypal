@@ -302,6 +302,14 @@ type (
 		UpdateTime    *time.Time  `json:"update_time,omitempty"`
 	}
 
+	// Resource can be either sale, authorization, capture or refund object
+	Resource struct {
+		Sale          *Sale          `json:"sale,omitempty"`
+		Authorization *Authorization `json:"authorization,omitempty"`
+		Capture       *Capture       `json:"capture,omitempty"`
+		Refund        *Refund        `json:"refund,omitempty"`
+	}
+
 	// Sale maps to sale object
 	Sale struct {
 		ID                        string                    `json:"id,omitempty"`
@@ -335,12 +343,12 @@ type (
 
 	// Transaction maps to transaction object
 	Transaction struct {
-		Amount           *Amount       `json:"amount"`
-		Description      string        `json:"description,omitempty"`
-		ItemList         *ItemList     `json:"item_list,omitempty"`
-		RelatedResources []interface{} `json:"related_resources,omitempty"`
-		InvoiceNumber    string        `json:"invoice_number,omitempty"`
-		Custom           string        `json:"custom,omitempty"`
-		SoftDescriptor   string        `json:"soft_descriptor,omitempty"`
+		Amount           *Amount    `json:"amount"`
+		Description      string     `json:"description,omitempty"`
+		ItemList         *ItemList  `json:"item_list,omitempty"`
+		RelatedResources []Resource `json:"related_resources,omitempty"`
+		InvoiceNumber    string     `json:"invoice_number,omitempty"`
+		Custom           string     `json:"custom,omitempty"`
+		SoftDescriptor   string     `json:"soft_descriptor,omitempty"`
 	}
 )

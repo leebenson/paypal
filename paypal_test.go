@@ -8,6 +8,11 @@ import (
 )
 
 var testClient *Client
+var done = make(chan bool)
+
+func init() {
+	getTestClient()
+}
 
 func getTestClient() *Client {
 	if testClient == nil {
@@ -23,6 +28,7 @@ func getTestClient() *Client {
 		}
 
 		testClient = NewClient(clientID, secret, APIBaseSandBox)
+		close(done)
 	}
 
 	return testClient
@@ -39,4 +45,14 @@ func TestAuth(t *testing.T) {
 		So(tokenResp.AppID, ShouldNotBeBlank)
 		So(tokenResp.ExpiresIn, ShouldBeGreaterThan, 0)
 	})
+}
+
+func withContext(fn func(c *Client)) {
+	for {
+		_, ok := <-done
+		if !ok {
+			break
+		}
+	}
+	fn(getTestClient())
 }
