@@ -2,6 +2,8 @@ package paypal
 
 import "fmt"
 
+// https://developer.paypal.com/webapps/developer/docs/api/#payments
+
 type (
 	CreatePaymentResp struct {
 		*Payment
