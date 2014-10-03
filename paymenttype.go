@@ -19,6 +19,11 @@ var (
 	CaptureStateRefunded          CaptureState = "refunded"
 	CaptureStatePartiallyRefunded CaptureState = "partially_refunded"
 
+	CreditCardTypeVisa       CreditCardType = "visa"
+	CreditCardTypeMastercard CreditCardType = "mastercard"
+	CreditCardTypeDiscover   CreditCardType = "discover"
+	CreditCardTypeAmex       CreditCardType = "amex"
+
 	CreditCardStateExpired CreditCardState = "expired"
 	CreditCardStateOK      CreditCardState = "ok"
 
@@ -96,6 +101,7 @@ var (
 type (
 	AuthorizationState        string
 	CaptureState              string
+	CreditCardType            string
 	CreditCardState           string
 	OrderState                string
 	PendingReason             string
@@ -188,7 +194,7 @@ type (
 		ID             string          `json:"id,omitempty"`
 		PayerID        string          `json:"payer_id,omitempty"`
 		Number         string          `json:"number"`
-		Type           string          `json:"type"`
+		Type           CreditCardType  `json:"type"`
 		ExpireMonth    string          `json:"expire_month"`
 		ExpireYear     string          `json:"expire_year"`
 		CVV2           string          `json:"cvv2,omitempty"`
