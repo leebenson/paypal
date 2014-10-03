@@ -1,6 +1,6 @@
 # Payment REST API Go client
 
-[![Coverage Status](https://coveralls.io/repos/fundary/paypal/badge.png)](https://coveralls.io/r/fundary/paypal) [![GoDoc](https://godoc.org/github.com/fundary/paypal?status.svg)](https://godoc.org/github.com/fundary/paypal)
+[![Coverage Status](https://coveralls.io/repos/fundary/paypal/badge.png)](https://coveralls.io/r/fundary/paypal) [![Build Status](https://travis-ci.org/fundary/paypal.svg?branch=develop)](https://travis-ci.org/fundary/paypal) [![GoDoc](https://godoc.org/github.com/fundary/paypal?status.svg)](https://godoc.org/github.com/fundary/paypal)
 
 A Go client for the Paypal REST API ([https://developer.paypal.com/webapps/developer/docs/api/](https://developer.paypal.com/webapps/developer/docs/api/))
 
@@ -75,7 +75,7 @@ PAYPAL_TEST_CLIENTID=[Paypal Client ID] PAYPAL_TEST_SECRET=[Paypal Secret] go te
 - [x] [Payments - Refunds](https://developer.paypal.com/webapps/developer/docs/api/#refunds)
 - [x] [Payments - Authorizations](https://developer.paypal.com/webapps/developer/docs/api/#authorizations)
 - [x] [Payments - Captures](https://developer.paypal.com/webapps/developer/docs/api/#billing-plans-and-agreements)
-- [ ] [Payments - Billing Plans and Agreements](https://developer.paypal.com/webapps/developer/docs/api/#billing-plans-and-agreements)
+- [x] [Payments - Billing Plans and Agreements](https://developer.paypal.com/webapps/developer/docs/api/#billing-plans-and-agreements)
 - [ ] [Payments - Order](https://developer.paypal.com/webapps/developer/docs/api/#orders)
 - [ ] [Vault](https://developer.paypal.com/webapps/developer/docs/api/#vault)
 - [ ] [Identity](https://developer.paypal.com/webapps/developer/docs/api/#identity)
