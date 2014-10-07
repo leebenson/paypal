@@ -54,7 +54,7 @@ func TestPayment(t *testing.T) {
 					Payer:        &payer,
 					Transactions: []Transaction{transaction},
 				}
-				newPaymentResp, err := client.CreatePayment(payment)
+				newPaymentResp, err, _ := client.CreatePayment(payment)
 
 				So(err, ShouldBeNil)
 				So(newPaymentResp.Intent, ShouldEqual, PaymentIntentSale)
@@ -70,7 +70,7 @@ func TestPayment(t *testing.T) {
 				// })
 
 				Convey("Fetching the newly created payment should return valid results", func() {
-					payment, err := client.GetPayment(newPaymentResp.ID)
+					payment, err, _ := client.GetPayment(newPaymentResp.ID)
 
 					So(err, ShouldBeNil)
 					So(payment.ID, ShouldEqual, newPaymentResp.ID)
@@ -80,7 +80,7 @@ func TestPayment(t *testing.T) {
 
 					Convey("With the sale endpoints", func() {
 						Convey("Fetching an existing sale should return valid data", func() {
-							sale, err := client.GetSale(newPaymentResp.Transactions[0].RelatedResources[0].Sale.ID)
+							sale, err, _ := client.GetSale(newPaymentResp.Transactions[0].RelatedResources[0].Sale.ID)
 
 							So(err, ShouldBeNil)
 							So(sale.ID, ShouldEqual, newPaymentResp.Transactions[0].RelatedResources[0].Sale.ID)
@@ -118,7 +118,7 @@ func TestPayment(t *testing.T) {
 				})
 
 				Convey("List payments should include the newly created payment", func() {
-					payments, err := client.ListPayments(map[string]string{
+					payments, err, _ := client.ListPayments(map[string]string{
 						"count":   "10",
 						"sort_by": "create_time",
 					})

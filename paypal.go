@@ -102,7 +102,7 @@ func (c *Client) GetAccessToken() (*TokenResp, error) {
 	req.Header.Set("Content-type", "application/x-www-form-urlencoded")
 
 	t := TokenResp{}
-	err = c.Send(req, &t)
+	_, err = c.Send(req, &t)
 	if err == nil {
 		t.ExpiresAt = time.Now().Add(time.Duration(t.ExpiresIn/2) * time.Second)
 	}
@@ -113,7 +113,7 @@ func (c *Client) GetAccessToken() (*TokenResp, error) {
 // Send makes a request to the API, the response body will be
 // unmarshaled into v, or if v is an io.Writer, the response will
 // be written to it without decoding
-func (c *Client) Send(req *http.Request, v interface{}) error {
+func (c *Client) Send(req *http.Request, v interface{}) (*http.Response, error) {
 	// Set default headers
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Accept-Language", "en_US")
@@ -127,7 +127,7 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return err
+		return resp, err
 	}
 	defer resp.Body.Close()
 
@@ -138,7 +138,7 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 			json.Unmarshal(data, errResp)
 		}
 
-		return errResp
+		return resp, errResp
 	}
 
 	if v != nil {
@@ -147,22 +147,22 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 		} else {
 			err = json.NewDecoder(resp.Body).Decode(v)
 			if err != nil {
-				return err
+				return resp, err
 			}
 		}
 	}
 
-	return nil
+	return resp, nil
 }
 
 // SendWithAuth makes a request to the API and apply OAuth2 header automatically.
 // If the access token soon to be expired, it will try to get a new one before
 // making the main request
-func (c *Client) SendWithAuth(req *http.Request, v interface{}) error {
+func (c *Client) SendWithAuth(req *http.Request, v interface{}) (*http.Response, error) {
 	if (c.Token == nil) || (c.Token.ExpiresAt.Before(time.Now())) {
 		resp, err := c.GetAccessToken()
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		c.Token = resp

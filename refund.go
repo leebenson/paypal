@@ -1,20 +1,23 @@
 package paypal
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 // GetRefund returns a refund by ID
-func (c *Client) GetRefund(refundID string) (*Refund, error) {
+func (c *Client) GetRefund(refundID string) (*Refund, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/refund/%s", c.APIBase, refundID), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Refund{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }

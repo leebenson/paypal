@@ -1,6 +1,9 @@
 package paypal
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 // https://developer.paypal.com/webapps/developer/docs/api/#billing-plans-and-agreements
 
@@ -13,25 +16,25 @@ type (
 // CreateBillingPlan creates an empty billing plan. By default, a created billing
 // plan is in a CREATED state. A user cannot subscribe to the billing plan
 // unless it has been set to the ACTIVE state.
-func (c *Client) CreateBillingPlan(p *Plan) (*Plan, error) {
+func (c *Client) CreateBillingPlan(p *Plan) (*Plan, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-plans", c.APIBase), p)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Plan{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // UpdateBillingPlan updates data of an existing billing plan. The state of a plan
 // must be PlanStateActive before a billing agreement is created
-func (c *Client) UpdateBillingPlan(p *Plan) error {
+func (c *Client) UpdateBillingPlan(p *Plan) (error, *http.Response) {
 	req, err := NewRequest("PATCH", fmt.Sprintf("%s/payments/billing-plans/%s", c.APIBase, p.ID), struct {
 		Path  string         `json:"path"`
 		Value *Plan          `json:"value"`
@@ -42,42 +45,42 @@ func (c *Client) UpdateBillingPlan(p *Plan) error {
 		OP:    PatchOperationReplace,
 	})
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return err
+		return err, resp
 	}
 
-	return nil
+	return nil, resp
 }
 
 // GetBillingPlan returns details about a specific billing plan
-func (c *Client) GetBillingPlan(planID string) (*Plan, error) {
+func (c *Client) GetBillingPlan(planID string) (*Plan, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/billing-plans/%s", c.APIBase, planID), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Plan{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // ListBillingPlans returns billing plans based on their current state: created
 // active or deactivated
-func (c *Client) ListBillingPlans(filter map[string]string) ([]Plan, error) {
+func (c *Client) ListBillingPlans(filter map[string]string) ([]Plan, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/billing-plans", c.APIBase), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	if filter != nil {
@@ -92,53 +95,53 @@ func (c *Client) ListBillingPlans(filter map[string]string) ([]Plan, error) {
 
 	var v ListBillingPlansResp
 
-	err = c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, &v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v.Plans, nil
+	return v.Plans, nil, resp
 }
 
 // CreateAgreement creates a billing agreement for the buyer. The EC token generates,
 // and the buyer must click an approval URL. Through the approval URL, you obtain
 // buyer details and the shipping address. After buyer approval, call the execute
 // URL to create the billing agreement in the system.
-func (c *Client) CreateAgreement(a *Agreement) (*Agreement, error) {
+func (c *Client) CreateAgreement(a *Agreement) (*Agreement, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements", c.APIBase), a)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Agreement{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // ExecuteAgreement executes an agreement after the buyer approves it.
-func (c *Client) ExecuteAgreement(paymentID string) (*Agreement, error) {
+func (c *Client) ExecuteAgreement(paymentID string) (*Agreement, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements/%s/agreement-execute", c.APIBase, paymentID), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Agreement{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // UpdateAgreement updates an agreement
-func (c *Client) UpdateAgreement(a *Agreement) error {
+func (c *Client) UpdateAgreement(a *Agreement) (error, *http.Response) {
 	req, err := NewRequest("PATCH", fmt.Sprintf("%s/payments/billing-agreements/%s", c.APIBase, a.ID), struct {
 		Path  string         `json:"path"`
 		Value *Agreement     `json:"value"`
@@ -149,77 +152,77 @@ func (c *Client) UpdateAgreement(a *Agreement) error {
 		OP:    PatchOperationReplace,
 	})
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return err
+		return err, resp
 	}
 
-	return nil
+	return nil, resp
 }
 
 // GetAgreement returns an agreement
-func (c *Client) GetAgreement(agreementID string) (*Agreement, error) {
+func (c *Client) GetAgreement(agreementID string) (*Agreement, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/billing-agreements/%s", c.APIBase, agreementID), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Agreement{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // SuspendAgreement suspends an agreement
-func (c *Client) SuspendAgreement(agreementID, note string) error {
+func (c *Client) SuspendAgreement(agreementID, note string) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements/%s/suspend", c.APIBase, agreementID), struct {
 		Note string `json:"note"`
 	}{
 		Note: note,
 	})
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 
-	return err
+	return err, resp
 }
 
 // ReactivateAgreement reactivate an agreement
-func (c *Client) ReactivateAgreement(agreementID, note string) error {
+func (c *Client) ReactivateAgreement(agreementID, note string) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements/%s/re-activate", c.APIBase, agreementID), struct {
 		Note string `json:"note"`
 	}{
 		Note: note,
 	})
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 
-	return err
+	return err, resp
 }
 
 // SearchAgreementTransactions searches for transactions within a billing agreement
-func (c *Client) SearchAgreementTransactions(agreementID string, filter map[string]string) (*AgreementTransactions, error) {
+func (c *Client) SearchAgreementTransactions(agreementID string, filter map[string]string) (*AgreementTransactions, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/billing-agreements/%s/transaction", c.APIBase, agreementID), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	if filter != nil {
@@ -234,48 +237,48 @@ func (c *Client) SearchAgreementTransactions(agreementID string, filter map[stri
 
 	v := &AgreementTransactions{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // CancelAgreement cancels an agreement
-func (c *Client) CancelAgreement(agreementID, note string) error {
+func (c *Client) CancelAgreement(agreementID, note string) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements/%s/cancel", c.APIBase, agreementID), struct {
 		Note string `json:"note"`
 	}{
 		Note: note,
 	})
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 
-	return err
+	return err, resp
 }
 
 // SetAgreementBalance sets the outstanding amount of an agreement
-func (c *Client) SetAgreementBalance(agreementID string, currency *Currency) error {
+func (c *Client) SetAgreementBalance(agreementID string, currency *Currency) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements/%s/set-balance", c.APIBase, agreementID), currency)
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 
-	return err
+	return err, resp
 }
 
 // BillAgreementBalance bills the outstanding amount of an agreement
-func (c *Client) BillAgreementBalance(agreementID string, currency *Currency, note string) error {
+func (c *Client) BillAgreementBalance(agreementID string, currency *Currency, note string) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/billing-agreements/%s/bill-balance", c.APIBase, agreementID), struct {
 		Note   string    `json:"note"`
 		Amount *Currency `json:"amount"`
@@ -284,12 +287,12 @@ func (c *Client) BillAgreementBalance(agreementID string, currency *Currency, no
 		Amount: currency,
 	})
 	if err != nil {
-		return err
+		return err, nil
 	}
 
 	v := &struct{}{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 
-	return err
+	return err, resp
 }
