@@ -134,6 +134,7 @@ func (c *Client) Send(req *http.Request, v interface{}) (*http.Response, error) 
 	if c := resp.StatusCode; c < 200 || c > 299 {
 		errResp := &ErrorResponse{Response: resp}
 		data, err := ioutil.ReadAll(resp.Body)
+		log.Println(string(data))
 		if err == nil && len(data) > 0 {
 			json.Unmarshal(data, errResp)
 		}

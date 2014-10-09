@@ -35,9 +35,7 @@ func (c *Client) DeleteStoredCreditCard(creditCardID string) (error, *http.Respo
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 
 	return err, resp
 }
@@ -60,8 +58,8 @@ func (c *Client) GetStoredCreditCard(creditCardID string) (*CreditCard, error, *
 }
 
 // UpdateStoredCreditCard modifies a stored credit card
-func (c *Client) UpdateStoredCreditCard(creditCard *CreditCard) (*CreditCard, error, *http.Response) {
-	req, err := NewRequest("PATCH", fmt.Sprintf("%s/vault/credit-card/%s", c.APIBase, creditCard.ID), struct {
+func (c *Client) UpdateStoredCreditCard(creditCardID string, creditCard *CreditCard) (*CreditCard, error, *http.Response) {
+	req, err := NewRequest("PATCH", fmt.Sprintf("%s/vault/credit-card/%s", c.APIBase, creditCardID), struct {
 		Path  string         `json:"path"`
 		Value *CreditCard    `json:"value"`
 		OP    PatchOperation `json:"op"`

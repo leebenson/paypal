@@ -34,9 +34,7 @@ func (c *Client) SendInvoice(invoiceID string) (error, *http.Response) {
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -137,9 +135,7 @@ func (c *Client) SendInvoiceReminder(invoiceID string, n *Notification) (error, 
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -154,9 +150,7 @@ func (c *Client) CancelInvoice(invoiceID string, n *Notification) (error, *http.
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -173,9 +167,7 @@ func (c *Client) DeleteInvoice(invoiceID string) (error, *http.Response) {
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -222,9 +214,7 @@ func (c *Client) RecordInvoicePayment(invoiceID string, method PaymentDetailMeth
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -245,9 +235,7 @@ func (c *Client) RecordInvoiceRefund(invoiceID string, date *time.Time, note str
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}

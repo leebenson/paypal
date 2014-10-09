@@ -48,9 +48,7 @@ func (c *Client) UpdateBillingPlan(p *Plan) (error, *http.Response) {
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -155,9 +153,7 @@ func (c *Client) UpdateAgreement(a *Agreement) (error, *http.Response) {
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 	if err != nil {
 		return err, resp
 	}
@@ -193,9 +189,7 @@ func (c *Client) SuspendAgreement(agreementID, note string) (error, *http.Respon
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 
 	return err, resp
 }
@@ -211,9 +205,7 @@ func (c *Client) ReactivateAgreement(agreementID, note string) (error, *http.Res
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 
 	return err, resp
 }
@@ -256,9 +248,7 @@ func (c *Client) CancelAgreement(agreementID, note string) (error, *http.Respons
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 
 	return err, resp
 }
@@ -270,9 +260,7 @@ func (c *Client) SetAgreementBalance(agreementID string, currency *Currency) (er
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 
 	return err, resp
 }
@@ -290,9 +278,7 @@ func (c *Client) BillAgreementBalance(agreementID string, currency *Currency, no
 		return err, nil
 	}
 
-	v := &struct{}{}
-
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, nil)
 
 	return err, resp
 }
