@@ -36,11 +36,11 @@ type (
 		// HTTP response that caused this error
 		Response *http.Response `json:"-"`
 
-		Name            string       `json:"name"`
-		DebugID         string       `json:"debug_id"`
-		Message         string       `json:"message"`
-		InformationLink string       `json:"information_link"`
-		Details         ErrorDetails `json:"details"`
+		Name            string         `json:"name"`
+		DebugID         string         `json:"debug_id"`
+		Message         string         `json:"message"`
+		InformationLink string         `json:"information_link"`
+		Details         []ErrorDetails `json:"details"`
 	}
 
 	// ErrorDetails map to error_details object

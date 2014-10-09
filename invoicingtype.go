@@ -1,7 +1,5 @@
 package paypal
 
-import "time"
-
 // https://developer.paypal.com/webapps/developer/docs/api/#common-invoicing-objects
 
 var (
@@ -87,7 +85,7 @@ type (
 		BillingInfo                []BillingInfo   `json:"billing_info"`
 		ShippingInfo               *ShippingInfo   `json:"shipping_info"`
 		Items                      []InvoiceItem   `json:"items"`
-		InvoiceDate                *time.Time      `json:"invoice_date"`
+		InvoiceDate                *Date           `json:"invoice_date"`
 		PaymentTerm                *PaymentTerm    `json:"payment_term,omitempty"`
 		Discount                   *Cost           `json:"discount,omitempty"`
 		ShippingCost               *ShippingCost   `json:"shipping_cost,omitempty"`
@@ -106,13 +104,13 @@ type (
 
 	// InvoiceItem maps to invoice_item object
 	InvoiceItem struct {
-		Name        string     `json:"name"`
-		Description string     `json:"description,omitempty"`
-		Quantity    float64    `json:"quantity"`
-		UnitPrice   *Currency  `json:"unit_price"`
-		Tax         *Tax       `json:"tax,omitempty"`
-		Date        *time.Time `json:"date,omitempty"`
-		Discount    *Cost      `json:"discount,omitempty"`
+		Name        string    `json:"name"`
+		Description string    `json:"description,omitempty"`
+		Quantity    float64   `json:"quantity"`
+		UnitPrice   *Currency `json:"unit_price"`
+		Tax         *Tax      `json:"tax,omitempty"`
+		Date        *Date     `json:"date,omitempty"`
+		Discount    *Cost     `json:"discount,omitempty"`
 	}
 
 	// MerchantInfo maps to merchant_info object
@@ -151,7 +149,7 @@ type (
 	// PaymentTerm maps to payment_term object
 	PaymentTerm struct {
 		TermType PaymentTermType `json:"term_type"`
-		DueDate  *time.Time      `json:"due_date"`
+		DueDate  *Date           `json:"due_date"`
 	}
 
 	// Cost maps to cost object
@@ -185,7 +183,7 @@ type (
 		Type            PaymentDetailType            `json:"type"`
 		TransactionID   string                       `json:"transaction_id"`
 		TransactionType PaymentDetailTransactionType `json:"transaction_type"`
-		Date            *time.Time                   `json:"date"`
+		Date            *Date                        `json:"date"`
 		Method          PaymentDetailMethod          `json:"method"`
 		Note            string                       `json:"note,omitempty"`
 	}
@@ -193,21 +191,21 @@ type (
 	// RefundDetail maps to refund_detail object
 	RefundDetail struct {
 		Type RefundDetailType `json:"type"`
-		Date *time.Time       `json:"date"`
+		Date *Date            `json:"date"`
 		Note string           `json:"note,omitempty"`
 	}
 
 	// Metadata maps to metadata object
 	Metadata struct {
-		CreatedDate     *time.Time `json:"created_date"`
-		CreatedBy       string     `json:"created_by"`
-		CancelledDate   *time.Time `json:"cancelled_date"`
-		CancelledBy     string     `json:"cancelled_by"`
-		LastUpdatedDate *time.Time `json:"last_updated_date"`
-		LastUpdatedBy   string     `json:"last_updated_by"`
-		FirstSentDate   *time.Time `json:"first_sent_date"`
-		LastSentDate    *time.Time `json:"last_sent_date"`
-		LastSentBy      *time.Time `json:"last_sent_by"`
+		CreatedDate     *Date  `json:"created_date"`
+		CreatedBy       string `json:"created_by"`
+		CancelledDate   *Date  `json:"cancelled_date"`
+		CancelledBy     string `json:"cancelled_by"`
+		LastUpdatedDate *Date  `json:"last_updated_date"`
+		LastUpdatedBy   string `json:"last_updated_by"`
+		FirstSentDate   *Date  `json:"first_sent_date"`
+		LastSentDate    *Date  `json:"last_sent_date"`
+		LastSentBy      *Date  `json:"last_sent_by"`
 	}
 
 	// Search maps to search object. Invoice search parameters
@@ -220,14 +218,14 @@ type (
 		Status                InvoiceStatus `json:"status,omitempty"`
 		LowerTotalAmount      *Currency     `json:"lower_total_amount,omitempty"`
 		UpperTotalAmount      *Currency     `json:"upper_total_amount,omitempty"`
-		StartInvoiceDate      *time.Time    `json:"start_invoice_date,omitempty"`
-		EndInvoiceDate        *time.Time    `json:"end_invoice_date,omitempty"`
-		StartDueDate          *time.Time    `json:"start_due_date,omitempty"`
-		EndDueDate            *time.Time    `json:"end_due_date,omitempty"`
-		StartPaymentDate      *time.Time    `json:"start_payment_date,omitempty"`
-		EndPaymentDate        *time.Time    `json:"end_payment_date,omitempty"`
-		StartCreationDate     *time.Time    `json:"start_creation_date,omitempty"`
-		EndCreationDate       *time.Time    `json:"end_creation_date,omitempty"`
+		StartInvoiceDate      *Date         `json:"start_invoice_date,omitempty"`
+		EndInvoiceDate        *Date         `json:"end_invoice_date,omitempty"`
+		StartDueDate          *Date         `json:"start_due_date,omitempty"`
+		EndDueDate            *Date         `json:"end_due_date,omitempty"`
+		StartPaymentDate      *Date         `json:"start_payment_date,omitempty"`
+		EndPaymentDate        *Date         `json:"end_payment_date,omitempty"`
+		StartCreationDate     *Date         `json:"start_creation_date,omitempty"`
+		EndCreationDate       *Date         `json:"end_creation_date,omitempty"`
 		Page                  int           `json:"page,omitempty"`
 		PageSize              int           `json:"page_size,omitempty"`
 		TotalCountRequired    bool          `json:"total_count_required,omitempty"`

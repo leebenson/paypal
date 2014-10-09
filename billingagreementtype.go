@@ -41,7 +41,7 @@ type (
 		ID                          string               `json:"id"`
 		Name                        string               `json:"name"`
 		Description                 string               `json:"desription"`
-		StartDate                   *time.Time           `json:"start_date"`
+		StartDate                   *Date                `json:"start_date"`
 		Payer                       *AgreementPayer      `json:"payer"`
 		ShippingAddress             *Address             `json:"shipping_address,omitempty"`
 		OverrideMerchantPreferences *MerchantPreferences `json:"override_merchant_preferences,omitempty"`

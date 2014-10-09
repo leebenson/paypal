@@ -29,7 +29,7 @@ type (
 	// Event maps to event object. Represents a Webhooks event
 	Event struct {
 		ID           string      `json:"id,omitempty"`
-		CreateTime   *time.Time  `json:"create_time,omitempty"`
+		CreateTime   *Date       `json:"create_time,omitempty"`
 		ResourceType string      `json:"resource_type,omitempty"`
 		EventType    string      `json:"event_type,omitempty"`
 		Summary      string      `json:"summary,omitempty"`
