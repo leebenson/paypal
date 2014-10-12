@@ -92,7 +92,7 @@ func (c *Client) ListWebhooks() ([]Webhook, error, *http.Response) {
 		Webhooks []Webhook `json:"webhooks"`
 	}
 
-	resp, err := c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, &v)
 	if err != nil {
 		return nil, err, resp
 	}

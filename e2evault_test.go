@@ -38,8 +38,10 @@ func TestVault(t *testing.T) {
 
 					// Skip this test for now as it seems the endpoint does not behave as specified in documentation
 					SkipConvey("Updating the stored credit card should updates the data", func() {
-						newCreditCard.FirstName = "Carol"
-						creditCard, err, resp := client.UpdateStoredCreditCard(newCreditCard.ID, newCreditCard)
+						patchCreditCard := &PatchCreditCard{
+							FirstName: "Carol",
+						}
+						creditCard, err, resp := client.UpdateStoredCreditCard(newCreditCard.ID, patchCreditCard)
 
 						So(err, ShouldBeNil)
 						So(resp.StatusCode, ShouldEqual, http.StatusOK)

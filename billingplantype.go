@@ -5,8 +5,8 @@ import "time"
 // https://developer.paypal.com/webapps/developer/docs/api/#plan-object
 
 var (
-	PlanTypeFixed    PlanType = "FIXED"
-	PlanTypeInfinite PlanType = "INFINITE"
+	PlanTypeFixed    PlanType = "fixed"
+	PlanTypeInfinite PlanType = "infinite"
 
 	PlanStateCreated  PlanState = "CREATED"
 	PlanStateActive   PlanState = "ACTIVE"
@@ -15,8 +15,8 @@ var (
 	PaymentDefinitionTypeTrial   PaymentDefinitionType = "TRIAL"
 	PaymentDefinitionTypeRegular PaymentDefinitionType = "REGULAR"
 
-	ChargeModelsTypeShipping ChargeModelsType = "shipping"
-	ChargeModelsTypeTax      ChargeModelsType = "tax"
+	ChargeModelsTypeShipping ChargeModelsType = "SHIPPING"
+	ChargeModelsTypeTax      ChargeModelsType = "TAX"
 
 	PatchOperationAdd     PatchOperation = "add"
 	PatchOperationRemove  PatchOperation = "remove"
@@ -36,18 +36,34 @@ type (
 
 	// Plan maps to plan object
 	Plan struct {
-		ID                  string               `json:"id"`
+		ID                  string               `json:"id,omitempty"`
 		Name                string               `json:"name"`
 		Description         string               `json:"description"`
 		Type                PlanType             `json:"type"`
-		State               PlanState            `json:"state"`
-		Payee               *Payee               `json:"payee"`
-		CreateTime          *time.Time           `json:"create_time"`
-		UpdateTime          *time.Time           `json:"update_time"`
-		PaymentDefinitions  []PaymentDefinition  `json:"payment_definitions"`
-		Terms               []Terms              `json:"terms"`
+		State               PlanState            `json:"state,omitempty"`
+		Payee               *Payee               `json:"payee,omitempty"`
+		CreateTime          *time.Time           `json:"create_time,omitempty"`
+		UpdateTime          *time.Time           `json:"update_time,omitempty"`
+		PaymentDefinitions  []PaymentDefinition  `json:"payment_definitions,omitempty"`
+		Terms               []Terms              `json:"terms,omitempty"`
 		MerchantPreferences *MerchantPreferences `json:"merchant_preferences,omitempty"`
-		Links               []Links              `json:"links"`
+		Links               []Links              `json:"links,omitempty"`
+	}
+
+	// PatchPlan is used in PATCH reqeusts
+	PatchPlan struct {
+		ID                  string               `json:"id,omitempty"`
+		Name                string               `json:"name,omitempty"`
+		Description         string               `json:"description,omitempty"`
+		Type                PlanType             `json:"type,omitempty"`
+		State               PlanState            `json:"state,omitempty"`
+		Payee               *Payee               `json:"payee,omitempty"`
+		CreateTime          *time.Time           `json:"create_time,omitempty"`
+		UpdateTime          *time.Time           `json:"update_time,omitempty"`
+		PaymentDefinitions  []PaymentDefinition  `json:"payment_definitions,omitempty"`
+		Terms               []Terms              `json:"terms,omitempty"`
+		MerchantPreferences *MerchantPreferences `json:"merchant_preferences,omitempty"`
+		Links               []Links              `json:"links,omitempty"`
 	}
 
 	// Payee maps to payee object
@@ -59,15 +75,11 @@ type (
 	}
 
 	// Phone maps to phone object
-	Phone struct {
-		CountryCode    string `json:"country_code"`
-		NationalNumber string `json:"national_number"`
-		Extension      string `json:"extension,omitempty"`
-	}
+	// See commontype.go
 
 	// PaymentDefinition maps to payment_definition object
 	PaymentDefinition struct {
-		ID                string                `json:"id"`
+		ID                string                `json:"id,omitempty"`
 		Name              string                `json:"name"`
 		Type              PaymentDefinitionType `json:"type"`
 		FrequencyInterval string                `json:"frequency_interval"`
@@ -79,14 +91,14 @@ type (
 
 	// ChargeModels maps to charge_models object
 	ChargeModels struct {
-		ID     string           `json:"id"`
+		ID     string           `json:"id,omitempty"`
 		Type   ChargeModelsType `json:"type"`
 		Amount *Currency        `json:"amount"`
 	}
 
 	// Terms maps to terms object
 	Terms struct {
-		ID               string    `json:"id"`
+		ID               string    `json:"id,omitempty"`
 		Type             TermType  `json:"type"`
 		MaxBillingAmount *Currency `json:"max_billing_amount"`
 		Occurrences      string    `json:"occurrences"`
@@ -96,24 +108,16 @@ type (
 
 	// MerchantPreferences maps to merchant_preferences boject
 	MerchantPreferences struct {
-		ID                      string    `json:"id"`
+		ID                      string    `json:"id,omitempty"`
 		SetupFee                *Currency `json:"setup_fee,omitempty"`
 		CancelURL               string    `json:"cancel_url"`
 		ReturnURL               string    `json:"return_url"`
-		NotifyURL               string    `json:"notify_url"`
-		MaxFailAttemps          string    `json:"max_fail_attemps,omitempty"` // Default is 0, which is unlimited
+		NotifyURL               string    `json:"notify_url,omitempty"`
+		MaxFailAttempts         string    `json:"max_fail_attempts,omitempty"` // Default is 0, which is unlimited
 		AutoBillAmount          string    `json:"auto_bill_amount,omitempty,omitempty"`
 		InitialFailAmountAction string    `json:"initial_fail_amount_action,omitempty"`
-		AcceptedPaymentType     string    `json:"accepted_payment_type"`
-		CharSet                 string    `json:"char_set"`
-	}
-
-	// PatchRequest maps to patch_request object
-	PatchRequest struct {
-		OP    PatchOperation `json:"op"`
-		Path  string         `json:"path"`
-		Value string         `json:"value"`
-		From  string         `json:"from"`
+		AcceptedPaymentType     string    `json:"accepted_payment_type,omitempty"`
+		CharSet                 string    `json:"char_set,omitempty"`
 	}
 
 	// PlanList maps to plan_list object

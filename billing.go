@@ -34,15 +34,21 @@ func (c *Client) CreateBillingPlan(p *Plan) (*Plan, error, *http.Response) {
 
 // UpdateBillingPlan updates data of an existing billing plan. The state of a plan
 // must be PlanStateActive before a billing agreement is created
-func (c *Client) UpdateBillingPlan(p *Plan) (error, *http.Response) {
-	req, err := NewRequest("PATCH", fmt.Sprintf("%s/payments/billing-plans/%s", c.APIBase, p.ID), struct {
+func (c *Client) UpdateBillingPlan(planID string, p *PatchPlan) (error, *http.Response) {
+	req, err := NewRequest("PATCH", fmt.Sprintf("%s/payments/billing-plans/%s", c.APIBase, planID), []struct {
 		Path  string         `json:"path"`
-		Value *Plan          `json:"value"`
+		Value *PatchPlan     `json:"value"`
 		OP    PatchOperation `json:"op"`
 	}{
-		Path:  "/",
-		Value: p,
-		OP:    PatchOperationReplace,
+		struct {
+			Path  string         `json:"path"`
+			Value *PatchPlan     `json:"value"`
+			OP    PatchOperation `json:"op"`
+		}{
+			Path:  "/",
+			Value: p,
+			OP:    PatchOperationReplace,
+		},
 	})
 	if err != nil {
 		return err, nil

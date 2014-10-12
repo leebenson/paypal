@@ -41,6 +41,7 @@ var (
 	BillingInfoLanguageZHXC BillingInfoLanguage = "zh_XC"
 
 	PaymentTermTypeDueOnReceipt PaymentTermType = "DUE_ON_RECEIPT"
+	PaymentTermTypeNoDueDate    PaymentTermType = "NO_DUE_DATE"
 	PaymentTermTypeNet10        PaymentTermType = "NET_10"
 	PaymentTermTypeNet15        PaymentTermType = "NET_15"
 	PaymentTermTypeNet30        PaymentTermType = "NET_30"
@@ -77,15 +78,15 @@ type (
 
 	// Invoice maps to invoice object
 	Invoice struct {
-		ID                         string          `json:"id"`
+		ID                         string          `json:"id,omitempty"`
 		Number                     string          `json:"number,omitempty"`
-		URI                        string          `json:"uri"`
-		Status                     InvoiceStatus   `json:"status"`
+		URI                        string          `json:"uri,omitempty"`
+		Status                     InvoiceStatus   `json:"status,omitempty"`
 		MerchantInfo               *MerchantInfo   `json:"merchant_info"`
 		BillingInfo                []BillingInfo   `json:"billing_info"`
-		ShippingInfo               *ShippingInfo   `json:"shipping_info"`
+		ShippingInfo               *ShippingInfo   `json:"shipping_info,omitempty"`
 		Items                      []InvoiceItem   `json:"items"`
-		InvoiceDate                *Date           `json:"invoice_date"`
+		InvoiceDate                *Date           `json:"invoice_date,omitempty"`
 		PaymentTerm                *PaymentTerm    `json:"payment_term,omitempty"`
 		Discount                   *Cost           `json:"discount,omitempty"`
 		ShippingCost               *ShippingCost   `json:"shipping_cost,omitempty"`
@@ -96,10 +97,10 @@ type (
 		Note                       string          `json:"note,omitempty"`
 		MerchantMemo               string          `json:"merchant_memo,omitempty"`
 		LogoURL                    string          `json:"logo_url,omitempty"`
-		TotalAmount                *Currency       `json:"total_amount"`
-		PaymentDetails             []PaymentDetail `json:"payment_details"`
-		RefundDetails              []RefundDetail  `json:"refund_details"`
-		Metadata                   *Metadata       `json:"metadata"`
+		TotalAmount                *Currency       `json:"total_amount,omitempty"`
+		PaymentDetails             []PaymentDetail `json:"payment_details,omitempty"`
+		RefundDetails              []RefundDetail  `json:"refund_details,omitempty"`
+		Metadata                   *Metadata       `json:"metadata,omitempty"`
 	}
 
 	// InvoiceItem maps to invoice_item object
@@ -149,41 +150,41 @@ type (
 	// PaymentTerm maps to payment_term object
 	PaymentTerm struct {
 		TermType PaymentTermType `json:"term_type"`
-		DueDate  *Date           `json:"due_date"`
+		DueDate  *Date           `json:"due_date,omitempty"`
 	}
 
 	// Cost maps to cost object
 	Cost struct {
-		Percent int       `json:"percent"`
-		Amount  *Currency `json:"amount"`
+		Percent int       `json:"percent,omitempty"`
+		Amount  *Currency `json:"amount,omitempty"`
 	}
 
 	// ShippingCost maps to shipping_cost object
 	ShippingCost struct {
-		Amount *Currency `json:"amount"`
-		Tax    *Tax      `json:"tax"`
+		Amount *Currency `json:"amount,omitempty"`
+		Tax    *Tax      `json:"tax,omitempty"`
 	}
 
 	// Tax maps to tax object
 	Tax struct {
-		ID      string    `json:"id"`
+		ID      string    `json:"id,omitempty"`
 		Name    string    `json:"name"`
 		Percent int       `json:"percent"`
-		Amount  *Currency `json:"amount"`
+		Amount  *Currency `json:"amount,omitempty"`
 	}
 
 	// CustomAmount maps to custom_amount object
 	CustomAmount struct {
-		Label  string    `json:"label"`
-		Amount *Currency `json:"amount"`
+		Label  string    `json:"label,omitempty"`
+		Amount *Currency `json:"amount,omitempty"`
 	}
 
 	// PaymentDetail maps to payment_detail object
 	PaymentDetail struct {
-		Type            PaymentDetailType            `json:"type"`
-		TransactionID   string                       `json:"transaction_id"`
-		TransactionType PaymentDetailTransactionType `json:"transaction_type"`
-		Date            *Date                        `json:"date"`
+		Type            PaymentDetailType            `json:"type,omitempty"`
+		TransactionID   string                       `json:"transaction_id,omitempty"`
+		TransactionType PaymentDetailTransactionType `json:"transaction_type,omitempty"`
+		Date            *Date                        `json:"date,omitempty"`
 		Method          PaymentDetailMethod          `json:"method"`
 		Note            string                       `json:"note,omitempty"`
 	}
@@ -191,25 +192,25 @@ type (
 	// RefundDetail maps to refund_detail object
 	RefundDetail struct {
 		Type RefundDetailType `json:"type"`
-		Date *Date            `json:"date"`
+		Date *Date            `json:"date,omitempty"`
 		Note string           `json:"note,omitempty"`
 	}
 
 	// Metadata maps to metadata object
 	Metadata struct {
-		CreatedDate     *Date  `json:"created_date"`
-		CreatedBy       string `json:"created_by"`
-		CancelledDate   *Date  `json:"cancelled_date"`
-		CancelledBy     string `json:"cancelled_by"`
-		LastUpdatedDate *Date  `json:"last_updated_date"`
-		LastUpdatedBy   string `json:"last_updated_by"`
-		FirstSentDate   *Date  `json:"first_sent_date"`
-		LastSentDate    *Date  `json:"last_sent_date"`
-		LastSentBy      *Date  `json:"last_sent_by"`
+		CreatedDate     *Datetime `json:"created_date,omitempty"`
+		CreatedBy       string    `json:"created_by,omitempty"`
+		CancelledDate   *Datetime `json:"cancelled_date,omitempty"`
+		CancelledBy     string    `json:"cancelled_by,omitempty"`
+		LastUpdatedDate *Datetime `json:"last_updated_date,omitempty"`
+		LastUpdatedBy   string    `json:"last_updated_by,omitempty"`
+		FirstSentDate   *Datetime `json:"first_sent_date,omitempty"`
+		LastSentDate    *Datetime `json:"last_sent_date,omitempty"`
+		LastSentBy      *Datetime `json:"last_sent_by,omitempty"`
 	}
 
 	// Search maps to search object. Invoice search parameters
-	Search struct {
+	InvoiceSearch struct {
 		Email                 string        `json:"email,omitempty"`
 		RecipientFirstName    string        `json:"recipient_first_name,omitempty"`
 		RecipientLastName     string        `json:"recipient_last_name,omitempty"`
@@ -218,14 +219,14 @@ type (
 		Status                InvoiceStatus `json:"status,omitempty"`
 		LowerTotalAmount      *Currency     `json:"lower_total_amount,omitempty"`
 		UpperTotalAmount      *Currency     `json:"upper_total_amount,omitempty"`
-		StartInvoiceDate      *Date         `json:"start_invoice_date,omitempty"`
-		EndInvoiceDate        *Date         `json:"end_invoice_date,omitempty"`
-		StartDueDate          *Date         `json:"start_due_date,omitempty"`
-		EndDueDate            *Date         `json:"end_due_date,omitempty"`
-		StartPaymentDate      *Date         `json:"start_payment_date,omitempty"`
-		EndPaymentDate        *Date         `json:"end_payment_date,omitempty"`
-		StartCreationDate     *Date         `json:"start_creation_date,omitempty"`
-		EndCreationDate       *Date         `json:"end_creation_date,omitempty"`
+		StartInvoiceDate      *Datetime     `json:"start_invoice_date,omitempty"`
+		EndInvoiceDate        *Datetime     `json:"end_invoice_date,omitempty"`
+		StartDueDate          *Datetime     `json:"start_due_date,omitempty"`
+		EndDueDate            *Datetime     `json:"end_due_date,omitempty"`
+		StartPaymentDate      *Datetime     `json:"start_payment_date,omitempty"`
+		EndPaymentDate        *Datetime     `json:"end_payment_date,omitempty"`
+		StartCreationDate     *Datetime     `json:"start_creation_date,omitempty"`
+		EndCreationDate       *Datetime     `json:"end_creation_date,omitempty"`
 		Page                  int           `json:"page,omitempty"`
 		PageSize              int           `json:"page_size,omitempty"`
 		TotalCountRequired    bool          `json:"total_count_required,omitempty"`

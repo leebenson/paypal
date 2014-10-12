@@ -58,11 +58,11 @@ func (c *Client) GetStoredCreditCard(creditCardID string) (*CreditCard, error, *
 }
 
 // UpdateStoredCreditCard modifies a stored credit card
-func (c *Client) UpdateStoredCreditCard(creditCardID string, creditCard *CreditCard) (*CreditCard, error, *http.Response) {
+func (c *Client) UpdateStoredCreditCard(creditCardID string, creditCard *PatchCreditCard) (*CreditCard, error, *http.Response) {
 	req, err := NewRequest("PATCH", fmt.Sprintf("%s/vault/credit-card/%s", c.APIBase, creditCardID), struct {
-		Path  string         `json:"path"`
-		Value *CreditCard    `json:"value"`
-		OP    PatchOperation `json:"op"`
+		Path  string           `json:"path"`
+		Value *PatchCreditCard `json:"value"`
+		OP    PatchOperation   `json:"op"`
 	}{
 		Path:  "/",
 		Value: creditCard,

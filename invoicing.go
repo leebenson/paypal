@@ -3,7 +3,6 @@ package paypal
 import (
 	"fmt"
 	"net/http"
-	"time"
 )
 
 // https://developer.paypal.com/webapps/developer/docs/api/#invoicing
@@ -43,8 +42,9 @@ func (c *Client) SendInvoice(invoiceID string) (error, *http.Response) {
 }
 
 // UpdateInvoice updates an invoic
-func (c *Client) UpdateInvoice(i *Invoice) (*Invoice, error, *http.Response) {
-	req, err := NewRequest("PUT", fmt.Sprintf("%s/invoicing/invoices/%s", c.APIBase, i.ID), i)
+func (c *Client) UpdateInvoice(invoiceID string, i *Invoice) (*Invoice, error, *http.Response) {
+	i.ID = ""
+	req, err := NewRequest("PUT", fmt.Sprintf("%s/invoicing/invoices/%s", c.APIBase, invoiceID), i)
 	if err != nil {
 		return nil, err, nil
 	}
@@ -106,7 +106,7 @@ func (c *Client) ListInvoices(filter map[string]string) ([]Invoice, error, *http
 }
 
 // SearchInvoices returns invoices that match the specificed criteria
-func (c *Client) SearchInvoices(s *Search) ([]Invoice, error, *http.Response) {
+func (c *Client) SearchInvoices(s *InvoiceSearch) ([]Invoice, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/invoicing/search", c.APIBase), s)
 	if err != nil {
 		return nil, err, nil
@@ -182,7 +182,7 @@ func (c *Client) DeleteInvoice(invoiceID string) (error, *http.Response) {
 // the invoice from a draft state to a payable state. As stated above, if you specify
 // qrinvoice@paypal.com as the recipient email address, the invoice will not be emailed.
 func (c *Client) GetInvoiceQRCode(invoiceID string, width, height int) (string, error, *http.Response) {
-	req, err := NewRequest("GET", fmt.Sprintf("%s/invoicing/invoices/%s/qr-code?width=%s&height%s", c.APIBase, invoiceID, width, height), nil)
+	req, err := NewRequest("GET", fmt.Sprintf("%s/invoicing/invoices/%s/qr-code?width=%d&height=%d", c.APIBase, invoiceID, width, height), nil)
 	if err != nil {
 		return "", err, nil
 	}
@@ -200,10 +200,10 @@ func (c *Client) GetInvoiceQRCode(invoiceID string, width, height int) (string, 
 }
 
 // RecordInvoicePayment marks an invoice as paid
-func (c *Client) RecordInvoicePayment(invoiceID string, method PaymentDetailMethod, date *time.Time, note string) (error, *http.Response) {
+func (c *Client) RecordInvoicePayment(invoiceID string, method PaymentDetailMethod, date *Datetime, note string) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/invoicing/invoices/%s/record-payment", c.APIBase, invoiceID), &struct {
 		Method PaymentDetailMethod `json:"method"`
-		Date   *time.Time          `json:"date"`
+		Date   *Datetime           `json:"date"`
 		Note   string              `json:"note"`
 	}{
 		Method: method,
@@ -223,10 +223,10 @@ func (c *Client) RecordInvoicePayment(invoiceID string, method PaymentDetailMeth
 }
 
 // RecordInvoiceRefund marks an invoice as refunded
-func (c *Client) RecordInvoiceRefund(invoiceID string, date *time.Time, note string) (error, *http.Response) {
+func (c *Client) RecordInvoiceRefund(invoiceID string, date *Datetime, note string) (error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/invoicing/invoices/%s/record-refund", c.APIBase, invoiceID), &struct {
-		Date *time.Time `json:"date"`
-		Note string     `json:"note"`
+		Date *Datetime `json:"date"`
+		Note string    `json:"note"`
 	}{
 		Date: date,
 		Note: note,

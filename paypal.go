@@ -124,6 +124,7 @@ func (c *Client) Send(req *http.Request, v interface{}) (*http.Response, error) 
 	}
 
 	log.Println(req.Method, ": ", req.URL)
+	log.Println("body:", req.Body)
 
 	resp, err := c.client.Do(req)
 	if err != nil {
