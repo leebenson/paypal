@@ -7,8 +7,8 @@ A Go client for the Paypal REST API ([https://developer.paypal.com/webapps/devel
 ## Goals
 
 - [x] Automated tests that don't require manual approval in Paypal account
+- [x] Concurrency safety by utilizing `PayPal-Request-Id`
 - [ ] Automated tests that require manual approval in a Paypal account (with a different build tag, eg. `PAYPAL_APPROVED_PAYMENT_ID`
-- [ ] Concurrency safety by utilizing `PayPal-Request-Id`
 
 ## Usage
 
@@ -59,13 +59,13 @@ func main() {
 This library use [Goconvey](http://goconvey.co/) for tests, so to run them, start Goconvey:
 
 ```
-PAYPAL_TEST_CLIENTID=[Paypal Client ID] PAYPAL_TEST_SECRET=[Paypal Secret] goconvey
+PAYPAL_TEST_CLIENTID=[Paypal Client ID] PAYPAL_TEST_SECRET=[Paypal Secret] PAYPAL_TEST_ACCOUNT_EMAIL=[Paypal test account email] goconvey
 ```
 
 Or you can just use `go test`
 
 ```
-PAYPAL_TEST_CLIENTID=[Paypal Client ID] PAYPAL_TEST_SECRET=[Paypal Secret] go test
+PAYPAL_TEST_CLIENTID=[Paypal Client ID] PAYPAL_TEST_SECRET=[Paypal Secret] PAYPAL_TEST_ACCOUNT_EMAIL=[Paypal test account email] go test
 ```
 
 ## Roadmap
