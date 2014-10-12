@@ -8,7 +8,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
+
+	"code.google.com/p/go-uuid/uuid"
 )
 
 const (
@@ -59,6 +63,21 @@ type (
 		ExpiresAt time.Time `json:"expires_at"`
 	}
 )
+
+var (
+	Debug bool
+)
+
+func init() {
+	var err error
+	debug := os.Getenv("PAYPAL_DEBUG")
+	if debug != "" {
+		Debug, err = strconv.ParseBool(debug)
+		if err != nil {
+			panic("Invalid value for PAYPAL_DEBUG")
+		}
+	}
+}
 
 func (r *ErrorResponse) Error() string {
 	return fmt.Sprintf("%v %v: %d %v\nDetails: %v",
@@ -123,8 +142,14 @@ func (c *Client) Send(req *http.Request, v interface{}) (*http.Response, error) 
 		req.Header.Set("Content-type", "application/json")
 	}
 
-	log.Println(req.Method, ": ", req.URL)
-	log.Println("body:", req.Body)
+	// Safe concurrent requests
+	req.Header.Set("Paypal-Request-Id", uuid.New())
+
+	if Debug {
+		log.Println(req.Method, ": ", req.URL)
+		log.Println(req.Header)
+		log.Println("body:", req.Body)
+	}
 
 	resp, err := c.client.Do(req)
 	if err != nil {
@@ -135,7 +160,9 @@ func (c *Client) Send(req *http.Request, v interface{}) (*http.Response, error) 
 	if c := resp.StatusCode; c < 200 || c > 299 {
 		errResp := &ErrorResponse{Response: resp}
 		data, err := ioutil.ReadAll(resp.Body)
-		log.Println(string(data))
+		if Debug {
+			log.Println(string(data))
+		}
 		if err == nil && len(data) > 0 {
 			json.Unmarshal(data, errResp)
 		}
