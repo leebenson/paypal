@@ -2,6 +2,7 @@ package paypal
 
 import (
 	"net/http"
+	"os"
 	"testing"
 	"time"
 
@@ -9,13 +10,18 @@ import (
 )
 
 func TestInvoice(t *testing.T) {
+	accountEmail := os.Getenv("PAYPAL_TEST_ACCOUNT_EMAIL")
+	if accountEmail == "" {
+		panic("Test Paypal account email is missing")
+	}
+
 	withContext(func(client *Client) {
 		Convey("With the invoice endpoint", t, func() {
 			Convey("Creating a invoice with valid data should be successful", func() {
 				invoice := &Invoice{
 
 					MerchantInfo: &MerchantInfo{
-						Email:        "lee-facilitator@fundary.com",
+						Email:        accountEmail,
 						FirstName:    "Dennis",
 						LastName:     "Doctor",
 						BusinessName: "Medical Professionals, LLC",
