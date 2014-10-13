@@ -44,7 +44,8 @@ func TestOrder(t *testing.T) {
 				So(newOrder.Intent, ShouldEqual, PaymentIntentOrder)
 				So(newOrder.ID, ShouldNotBeNil)
 
-				Convey("Retrieving an order should returns valid data", func() {
+				// Require user's approval
+				SkipConvey("Retrieving an order should returns valid data", func() {
 					order, err, resp := client.GetOrder(newOrder.ID)
 
 					So(err, ShouldBeNil)
