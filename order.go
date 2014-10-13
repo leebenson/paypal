@@ -25,7 +25,7 @@ func (c *Client) GetOrder(orderID string) (*Order, error, *http.Response) {
 }
 
 // AuthorizeOrder authorizes an order
-func (c *Client) AuthorizeOrder(orderID, string, amount *Amount) (*Authorization, error, *http.Response) {
+func (c *Client) AuthorizeOrder(orderID string, amount *Amount) (*Authorization, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/orders/%s/authorize", c.APIBase, orderID), struct {
 		Amount *Amount `json:"amount"`
 	}{
@@ -47,7 +47,7 @@ func (c *Client) AuthorizeOrder(orderID, string, amount *Amount) (*Authorization
 
 // CaptureOrder captures a payment on an order. To use this call, an original payment
 // must specify an "intent" of "order"
-func (c *Client) CaptureOrder(orderID, string, amount *Amount, isFinal bool) (*Capture, error, *http.Response) {
+func (c *Client) CaptureOrder(orderID string, amount *Amount, isFinal bool) (*Capture, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/orders/%s/capture", c.APIBase, orderID), struct {
 		Amount         *Amount `json:"amount"`
 		IsFinalCapture bool    `json:"is_final_capture"`
