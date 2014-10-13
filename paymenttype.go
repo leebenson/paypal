@@ -18,9 +18,7 @@ var (
 	CaptureStateCompleted         CaptureState = "completed"
 	CaptureStateRefunded          CaptureState = "refunded"
 	CaptureStatePartiallyRefunded CaptureState = "partially_refunded"
-
-	CreditCardStateExpired CreditCardState = "expired"
-	CreditCardStateOK      CreditCardState = "ok"
+	CaptureStateAuthorized        CaptureState = "authorized"
 
 	OrderStatePending           OrderState = "PENDING"
 	OrderStateCompleted         OrderState = "COMPLETED"
@@ -70,10 +68,6 @@ var (
 	PaymentStateCanceled PaymentState = "canceled"
 	PaymentStateExpired  PaymentState = "expired"
 
-	AddressTypeResidential AddressType = "residential"
-	AddressTypeBusiness    AddressType = "business"
-	AddressTypeMailbox     AddressType = "mailbox"
-
 	PaymentIntentSale      PaymentIntent = "sale"
 	PaymentIntentAuthorize PaymentIntent = "authorize"
 	PaymentIntentOrder     PaymentIntent = "order"
@@ -96,7 +90,6 @@ var (
 type (
 	AuthorizationState        string
 	CaptureState              string
-	CreditCardState           string
 	OrderState                string
 	PendingReason             string
 	ReasonCode                string
@@ -104,7 +97,6 @@ type (
 	ProtectionEligibilityType string
 	TaxIDType                 string
 	PaymentState              string
-	AddressType               string
 	PaymentMethod             string
 	PayerStatus               string
 	PaymentIntent             string
@@ -113,15 +105,7 @@ type (
 	SalePaymentMode           string
 
 	// Address maps to address object
-	Address struct {
-		Line1       string `json:"line1"`
-		Line2       string `json:"line2,omitempty"`
-		City        string `json:"city"`
-		CountryCode string `json:"country_code"`
-		PostalCode  string `json:"postal_code,omitempty"`
-		State       string `json:"state,omitempty"`
-		Phone       string `json:"phone,omitempty"`
-	}
+	// See commontype.go
 
 	// Amount maps to the amount object
 	Amount struct {
@@ -184,29 +168,10 @@ type (
 	}
 
 	// CreditCard maps to credit_card object
-	CreditCard struct {
-		ID             string          `json:"id,omitempty"`
-		PayerID        string          `json:"payer_id,omitempty"`
-		Number         string          `json:"number"`
-		Type           string          `json:"type"`
-		ExpireMonth    string          `json:"expire_month"`
-		ExpireYear     string          `json:"expire_year"`
-		CVV2           string          `json:"cvv2,omitempty"`
-		FirstName      string          `json:"first_name,omitempty"`
-		LastName       string          `json:"last_name,omitempty"`
-		BillingAddress *Address        `json:"billing_address,omitempty"`
-		State          CreditCardState `json:"state,omitempty"`
-		ValidUntil     string          `json:"valid_until,omitempty"`
-	}
+	// See commontype.go
 
 	// CreditCardToken maps to credit_card_token object
-	CreditCardToken struct {
-		CreditCardID string `json:"credit_card_id"`
-		PayerID      string `json:"payer_id,omitempty"`
-		Last4        string `json:"last4,omitempty"`
-		ExpireYear   string `json:"expire_year,omitempty"`
-		ExpireMonth  string `json:"expire_month,omitempty"`
-	}
+	// See commontype.go
 
 	// FundingInstrument maps to funding_instrument object
 	FundingInstrument struct {
@@ -268,15 +233,15 @@ type (
 
 	// Payment maps to payment object
 	Payment struct {
-		Intent              PaymentIntent  `json:"intent"`
-		Payer               *Payer         `json:"payer"`
-		Transactions        []Transaction  `json:"transactions"`
-		RedirectURLs        []RedirectURLs `json:"redirect_urls,omitempty"`
-		ID                  string         `json:"id,omitempty"`
-		CreateTime          *time.Time     `json:"create_time,omitempty"`
-		State               PaymentState   `json:"state,omitempty"`
-		UpdateTime          *time.Time     `json:"update_time,omitempty"`
-		ExperienceProfileID string         `json:"experience_profile_id,omitempty"`
+		Intent              PaymentIntent `json:"intent"`
+		Payer               *Payer        `json:"payer"`
+		Transactions        []Transaction `json:"transactions"`
+		RedirectURLs        RedirectURLs  `json:"redirect_urls,omitempty"`
+		ID                  string        `json:"id,omitempty"`
+		CreateTime          *time.Time    `json:"create_time,omitempty"`
+		State               PaymentState  `json:"state,omitempty"`
+		UpdateTime          *time.Time    `json:"update_time,omitempty"`
+		ExperienceProfileID string        `json:"experience_profile_id,omitempty"`
 	}
 
 	// PaymentExecution maps to payment_execution object

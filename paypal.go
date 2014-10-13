@@ -8,7 +8,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
+
+	"code.google.com/p/go-uuid/uuid"
 )
 
 const (
@@ -36,11 +40,11 @@ type (
 		// HTTP response that caused this error
 		Response *http.Response `json:"-"`
 
-		Name            string       `json:"name"`
-		DebugID         string       `json:"debug_id"`
-		Message         string       `json:"message"`
-		InformationLink string       `json:"information_link"`
-		Details         ErrorDetails `json:"details"`
+		Name            string         `json:"name"`
+		DebugID         string         `json:"debug_id"`
+		Message         string         `json:"message"`
+		InformationLink string         `json:"information_link"`
+		Details         []ErrorDetails `json:"details"`
 	}
 
 	// ErrorDetails map to error_details object
@@ -59,6 +63,21 @@ type (
 		ExpiresAt time.Time `json:"expires_at"`
 	}
 )
+
+var (
+	Debug bool
+)
+
+func init() {
+	var err error
+	debug := os.Getenv("PAYPAL_DEBUG")
+	if debug != "" {
+		Debug, err = strconv.ParseBool(debug)
+		if err != nil {
+			panic("Invalid value for PAYPAL_DEBUG")
+		}
+	}
+}
 
 func (r *ErrorResponse) Error() string {
 	return fmt.Sprintf("%v %v: %d %v\nDetails: %v",
@@ -102,7 +121,7 @@ func (c *Client) GetAccessToken() (*TokenResp, error) {
 	req.Header.Set("Content-type", "application/x-www-form-urlencoded")
 
 	t := TokenResp{}
-	err = c.Send(req, &t)
+	_, err = c.Send(req, &t)
 	if err == nil {
 		t.ExpiresAt = time.Now().Add(time.Duration(t.ExpiresIn/2) * time.Second)
 	}
@@ -113,7 +132,7 @@ func (c *Client) GetAccessToken() (*TokenResp, error) {
 // Send makes a request to the API, the response body will be
 // unmarshaled into v, or if v is an io.Writer, the response will
 // be written to it without decoding
-func (c *Client) Send(req *http.Request, v interface{}) error {
+func (c *Client) Send(req *http.Request, v interface{}) (*http.Response, error) {
 	// Set default headers
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Accept-Language", "en_US")
@@ -123,22 +142,32 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 		req.Header.Set("Content-type", "application/json")
 	}
 
-	log.Println(req.Method, ": ", req.URL)
+	// Safe concurrent requests
+	req.Header.Set("Paypal-Request-Id", uuid.New())
+
+	if Debug {
+		log.Println(req.Method, ": ", req.URL)
+		log.Println(req.Header)
+		log.Println("body:", req.Body)
+	}
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return err
+		return resp, err
 	}
 	defer resp.Body.Close()
 
 	if c := resp.StatusCode; c < 200 || c > 299 {
 		errResp := &ErrorResponse{Response: resp}
 		data, err := ioutil.ReadAll(resp.Body)
+		if Debug {
+			log.Println(string(data))
+		}
 		if err == nil && len(data) > 0 {
 			json.Unmarshal(data, errResp)
 		}
 
-		return errResp
+		return resp, errResp
 	}
 
 	if v != nil {
@@ -147,22 +176,22 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 		} else {
 			err = json.NewDecoder(resp.Body).Decode(v)
 			if err != nil {
-				return err
+				return resp, err
 			}
 		}
 	}
 
-	return nil
+	return resp, nil
 }
 
 // SendWithAuth makes a request to the API and apply OAuth2 header automatically.
 // If the access token soon to be expired, it will try to get a new one before
 // making the main request
-func (c *Client) SendWithAuth(req *http.Request, v interface{}) error {
+func (c *Client) SendWithAuth(req *http.Request, v interface{}) (*http.Response, error) {
 	if (c.Token == nil) || (c.Token.ExpiresAt.Before(time.Now())) {
 		resp, err := c.GetAccessToken()
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		c.Token = resp

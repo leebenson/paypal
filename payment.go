@@ -1,6 +1,11 @@
 package paypal
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
+
+// https://developer.paypal.com/webapps/developer/docs/api/#payments
 
 type (
 	CreatePaymentResp struct {
@@ -21,24 +26,24 @@ type (
 )
 
 // CreatePayment creates a payment in Paypal
-func (c *Client) CreatePayment(p Payment) (*CreatePaymentResp, error) {
+func (c *Client) CreatePayment(p Payment) (*CreatePaymentResp, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/payment", c.APIBase), p)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &CreatePaymentResp{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // ExecutePayment completes an approved Paypal payment that has been approved by the payer
-func (c *Client) ExecutePayment(paymentID, payerID string, transactions []Transaction) (*ExecutePaymentResp, error) {
+func (c *Client) ExecutePayment(paymentID, payerID string, transactions []Transaction) (*ExecutePaymentResp, error, *http.Response) {
 	req, err := NewRequest("POST", fmt.Sprintf("%s/payments/payment/%s/execute", c.APIBase, paymentID), struct {
 		PayerID      string        `json:"payer_id"`
 		Transactions []Transaction `json:"transactions"`
@@ -47,41 +52,41 @@ func (c *Client) ExecutePayment(paymentID, payerID string, transactions []Transa
 		transactions,
 	})
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &ExecutePaymentResp{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // GetPayment fetches a payment in Paypal
-func (c *Client) GetPayment(id string) (*Payment, error) {
+func (c *Client) GetPayment(id string) (*Payment, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/payment/%s", c.APIBase, id), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	v := &Payment{}
 
-	err = c.SendWithAuth(req, v)
+	resp, err := c.SendWithAuth(req, v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v, nil
+	return v, nil, resp
 }
 
 // ListPayments retrieve payments resources from Paypal
-func (c *Client) ListPayments(filter map[string]string) ([]Payment, error) {
+func (c *Client) ListPayments(filter map[string]string) ([]Payment, error, *http.Response) {
 	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/payment/", c.APIBase), nil)
 	if err != nil {
-		return nil, err
+		return nil, err, nil
 	}
 
 	if filter != nil {
@@ -96,10 +101,10 @@ func (c *Client) ListPayments(filter map[string]string) ([]Payment, error) {
 
 	var v ListPaymentsResp
 
-	err = c.SendWithAuth(req, &v)
+	resp, err := c.SendWithAuth(req, &v)
 	if err != nil {
-		return nil, err
+		return nil, err, resp
 	}
 
-	return v.Payments, nil
+	return v.Payments, nil, resp
 }
