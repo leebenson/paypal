@@ -132,6 +132,7 @@ type (
 
 	// Authorization maps to the  authorization object
 	Authorization struct {
+		Id                        int64              `json:"-"`
 		Amount                    *Amount            `json:"amount,omitempty"`
 		CreateTime                *time.Time         `json:"create_time,omitempty"`
 		UpdateTime                *time.Time         `json:"update_time,omitempty"`
@@ -147,6 +148,7 @@ type (
 
 	// Capture maps to the capture object
 	Capture struct {
+		Id             int64        `json:"-"`
 		Amount         *Amount      `json:"amount,omitempty"`
 		IsFinalCapture bool         `json:"is_final_capture"`
 		CreateTime     *time.Time   `json:"create_time,omitempty"`
@@ -159,6 +161,7 @@ type (
 
 	// Details maps to the details object
 	Details struct {
+		Id               int64  `json:"-"`
 		Shipping         string `json:"shipping,omitempty"`
 		Subtotal         string `json:"subtotal"`
 		Tax              string `json:"tax,omitempty"`

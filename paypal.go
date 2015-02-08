@@ -36,15 +36,15 @@ type (
 		// HTTP response that caused this error
 		Response *http.Response `json:"-"`
 
-		Name            string       `json:"name"`
-		DebugID         string       `json:"debug_id"`
-		Message         string       `json:"message"`
-		InformationLink string       `json:"information_link"`
-		Details         ErrorDetails `json:"details"`
+		Name            string        `json:"name"`
+		DebugID         string        `json:"debug_id"`
+		Message         string        `json:"message"`
+		InformationLink string        `json:"information_link"`
+		Details         []ErrorDetail `json:"details"`
 	}
 
 	// ErrorDetails map to error_details object
-	ErrorDetails struct {
+	ErrorDetail struct {
 		Field string `json:"field"`
 		Issue string `json:"issue"`
 	}
@@ -134,6 +134,7 @@ func (c *Client) Send(req *http.Request, v interface{}) error {
 	if c := resp.StatusCode; c < 200 || c > 299 {
 		errResp := &ErrorResponse{Response: resp}
 		data, err := ioutil.ReadAll(resp.Body)
+
 		if err == nil && len(data) > 0 {
 			json.Unmarshal(data, errResp)
 		}
