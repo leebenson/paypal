@@ -271,15 +271,15 @@ type (
 
 	// Payment maps to payment object
 	Payment struct {
-		Intent              PaymentIntent  `json:"intent"`
-		Payer               *Payer         `json:"payer"`
-		Transactions        []Transaction  `json:"transactions"`
-		RedirectURLs        []RedirectURLs `json:"redirect_urls,omitempty"`
-		ID                  string         `json:"id,omitempty"`
-		CreateTime          *time.Time     `json:"create_time,omitempty"`
-		State               PaymentState   `json:"state,omitempty"`
-		UpdateTime          *time.Time     `json:"update_time,omitempty"`
-		ExperienceProfileID string         `json:"experience_profile_id,omitempty"`
+		Intent              PaymentIntent `json:"intent"`
+		Payer               *Payer        `json:"payer"`
+		Transactions        []Transaction `json:"transactions"`
+		RedirectURLs        *RedirectURLs `json:"redirect_urls,omitempty"`
+		ID                  string        `json:"id,omitempty"`
+		CreateTime          *time.Time    `json:"create_time,omitempty"`
+		State               PaymentState  `json:"state,omitempty"`
+		UpdateTime          *time.Time    `json:"update_time,omitempty"`
+		ExperienceProfileID string        `json:"experience_profile_id,omitempty"`
 	}
 
 	// PaymentExecution maps to payment_execution object
