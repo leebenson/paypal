@@ -219,7 +219,7 @@ type (
 
 	// Item maps to item object
 	Item struct {
-		Quantity    string `json:"quantity"`
+		Quantity    int    `json:"quantity"`
 		Name        string `json:"name"`
 		Price       string `json:"price"`
 		Currency    string `json:"currency"`
