@@ -4,7 +4,7 @@ import "fmt"
 
 // GetRefund returns a refund by ID
 func (c *Client) GetRefund(refundID string) (*Refund, error) {
-	req, err := NewRequest("GET", fmt.Sprintf("%s/refund/%s", c.APIBase, refundID), nil)
+	req, err := NewRequest("GET", fmt.Sprintf("%s/payments/refund/%s", c.APIBase, refundID), nil)
 	if err != nil {
 		return nil, err
 	}
