@@ -1,6 +1,5 @@
 # Payment REST API Go client
-
-[![Coverage Status](https://coveralls.io/repos/fundary/paypal/badge.png)](https://coveralls.io/r/fundary/paypal) [![GoDoc](https://godoc.org/github.com/fundary/paypal?status.svg)](https://godoc.org/github.com/fundary/paypal)
+ [![GoDoc](https://godoc.org/github.com/leebenson/paypal?status.svg)](https://godoc.org/github.com/leebenson/paypal)
 
 This is a client for the Paypal REST API ([https://developer.paypal.com/webapps/developer/docs/api/](https://developer.paypal.com/webapps/developer/docs/api/)
 
@@ -13,7 +12,7 @@ This is a client for the Paypal REST API ([https://developer.paypal.com/webapps/
 ## Usage
 
 ```bash
-go get github.com/fundary/paypal
+go get github.com/leebenson/paypal
 ```
 
 Import into your app and start using it:
@@ -26,18 +25,18 @@ import (
 	"log"
 	"os"
 
-	"github.com/fundary/paypal"
+	"github.com/leebenson/paypal"
 )
 
 func main() {
 	clientID := os.Getenv("PAYPAL_CLIENTID")
 	if clientID == "" {
-		panic("Paypal clientID is missing")
+		panic("PayPal clientID is missing")
 	}
 
 	secret := os.Getenv("PAYPAL_SECRET")
 	if secret == "" {
-		panic("Paypal secret is missing")
+		panic("PayPal secret is missing")
 	}
 
 	client := paypal.NewClient(clientID, secret, paypal.APIBaseLive)
