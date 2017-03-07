@@ -1,5 +1,6 @@
 # Payment REST API Go client
  [![GoDoc](https://godoc.org/github.com/leebenson/paypal?status.svg)](https://godoc.org/github.com/leebenson/paypal)
+ [![API Testing](https://img.shields.io/badge/API%20Test-RapidAPI-blue.svg)](https://rapidapi.com/package/PayPal/functions?utm_source=PaypalGithub&utm_medium=button&utm_content=Vender_GitHub)
 
 This is a client for the Paypal REST API ([https://developer.paypal.com/webapps/developer/docs/api/](https://developer.paypal.com/webapps/developer/docs/api/)
 
